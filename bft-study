@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ИТ с нуля">
+<meta name="theme-color" content="#ffffff">
+<title>ИТ с нуля</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --card: #f2f2f7;
+  --text: #1c1c1e;
+  --text-2: #6c6c70;
+  --sep: rgba(60,60,67,.18);
+  --blue: #007aff;
+  --green: #34c759;
+  --green-bg: rgba(52,199,89,.16);
+  --red: #ff3b30;
+  --red-bg: rgba(255,59,48,.14);
+  --code-bg: #e5e5ea;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; background: #ffffff; color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; }
+#app { max-width: 640px; margin: 0 auto; padding: 12px 16px 40px; padding-top: calc(env(safe-area-inset-top, 0px) + 12px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 40px); }
+
+.topbar { display: flex; align-items: center; min-height: 44px; margin-bottom: 8px; }
+.back { background: none; border: 0; color: var(--blue); font-size: 17px; padding: 10px 8px 10px 0; cursor: pointer; font-family: inherit; }
+h1.large { font-size: 34px; font-weight: 800; letter-spacing: -.5px; margin: 4px 0 18px; }
+h2.title { font-size: 28px; font-weight: 800; letter-spacing: -.4px; margin: 4px 0 6px; }
+.sub { color: var(--text-2); font-size: 15px; margin: 0 0 18px; line-height: 1.4; }
+
+.card { background: var(--card); border-radius: 22px; padding: 20px; margin-bottom: 16px; }
+.progress-card { background: #007aff; background: linear-gradient(135deg, #0a84ff, #5e5ce6); color: #fff; }
+.progress-card .row { display: flex; justify-content: space-between; gap: 12px; }
+.stat { flex: 1; }
+.stat .num { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+.stat .lbl { font-size: 14px; opacity: .9; margin-top: 2px; }
+.bar { height: 10px; background: rgba(255,255,255,.3); border-radius: 6px; margin-top: 18px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: #fff; border-radius: 6px; }
+
+.module { display: block; width: 100%; text-align: left; border: 0; font-family: inherit; color: var(--text); cursor: pointer;
+  background: var(--card); border-radius: 22px; padding: 22px; margin-bottom: 16px; }
+.module:active { opacity: .7; }
+.module .icon { width: 56px; height: 56px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 14px; }
+.module h3 { margin: 0 0 6px; font-size: 21px; letter-spacing: -.3px; }
+.module p { margin: 0 0 14px; color: var(--text-2); font-size: 15px; line-height: 1.4; }
+.chip { display: inline-block; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 20px; background: #fff; color: var(--text-2); }
+.chip.ok { background: var(--green-bg); color: #1f8f3a; }
+
+.lesson-item { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; border: 0; font-family: inherit; color: var(--text);
+  background: var(--card); border-radius: 18px; padding: 18px; margin-bottom: 12px; cursor: pointer; min-height: 72px; }
+.lesson-item:active { opacity: .6; }
+.lesson-item .badge { flex: none; width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--text-2);
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; }
+.lesson-item.done .badge { background: var(--green); color: #fff; }
+.lesson-item .t { font-size: 17px; font-weight: 600; line-height: 1.3; }
+.lesson-item .s { font-size: 14px; color: var(--text-2); margin-top: 2px; }
+.lesson-item .arrow { margin-left: auto; color: var(--text-2); font-size: 22px; }
+
+.theory p { font-size: 17px; line-height: 1.55; margin: 0 0 14px; }
+.theory p:last-child { margin-bottom: 0; }
+.theory h4 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .6px; color: var(--text-2); }
+code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 6px; font-size: 15px; }
+pre { background: var(--code-bg); padding: 14px; border-radius: 14px; font-size: 14.5px; overflow-x: auto; margin: 0 0 14px; line-height: 1.5; }
+.tbl-wrap { overflow-x: auto; margin: 0 0 14px; border-radius: 14px; border: 1px solid var(--sep); background: #fff; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--sep); white-space: nowrap; }
+th { background: var(--code-bg); font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--text-2); }
+tr:last-child td { border-bottom: 0; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; font-size: 14px; font-weight: 600; }
+.flow span.st { background: var(--code-bg); padding: 7px 11px; border-radius: 20px; }
+.flow span.ar { color: var(--text-2); }
+
+.q-title { font-size: 13px; text-transform: uppercase; letter-spacing: .6px; color: var(--text-2); margin: 0 0 6px; }
+.q-text { font-size: 19px; font-weight: 700; line-height: 1.35; margin: 0 0 14px; }
+.opt { display: block; width: 100%; text-align: left; font-family: inherit; font-size: 17px; line-height: 1.35; color: var(--text);
+  background: #fff; border: 2px solid transparent; border-radius: 16px; padding: 16px 18px; margin-bottom: 10px; cursor: pointer; min-height: 56px; }
+.opt:active:not(:disabled) { opacity: .7; }
+.opt.correct { background: var(--green-bg); border-color: var(--green); color: #1f8f3a; font-weight: 600; }
+.opt.wrong { background: var(--red-bg); border-color: var(--red); color: #d62b20; font-weight: 600; }
+.opt:disabled { cursor: default; }
+.hint { display: none; margin: 4px 0 6px; padding: 12px 14px; border-radius: 14px; font-size: 15px; line-height: 1.45; }
+.hint.show { display: block; }
+.hint.bad { background: var(--red-bg); color: #d62b20; }
+.hint.good { background: var(--green-bg); color: #1f8f3a; }
+
+.btn { display: block; width: 100%; font-family: inherit; font-size: 18px; font-weight: 700; color: #fff; background: var(--blue);
+  border: 0; border-radius: 18px; padding: 18px; min-height: 58px; cursor: pointer; }
+.btn:active { opacity: .8; }
+.btn.green { background: var(--green); }
+.btn.ghost { background: transparent; color: var(--red); font-size: 15px; font-weight: 600; margin-top: 12px; }
+.note { text-align: center; font-size: 14px; color: var(--text-2); margin: 10px 0 0; min-height: 20px; }
+
+/* ===== Визуальные схемы ===== */
+.vcap { font-size: 15px; font-weight: 600; margin: 4px 0 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+.lg { font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 20px; }
+.lg.c1 { background: rgba(0,122,255,.15); color: #0062cc; }
+.lg.c2 { background: rgba(255,149,0,.22); color: #b36200; }
+.vt td, .vt th { text-align: center; }
+.vt td.col, .vt th.col { background: rgba(0,122,255,.15); color: #0062cc; font-weight: 700; }
+.vt tr.row td { background: rgba(255,149,0,.22); }
+.vt tr.row td.col { background: rgba(175,82,222,.3); color: #6b1f94; }
+.vt td.dim, .vt th.dim { opacity: .3; }
+.vt td.pick, .vt th.pick { background: var(--green-bg); color: #1f8f3a; font-weight: 700; }
+.arrowdown { text-align: center; font-size: 14px; font-weight: 600; color: var(--text-2); margin: 2px 0 8px; }
+.res { max-width: 160px; margin-left: auto; margin-right: auto; }
+
+.fc { display: flex; flex-direction: column; align-items: stretch; gap: 4px; margin: 0 0 14px; }
+.fb { border-radius: 16px; padding: 12px 14px; font-size: 15px; line-height: 1.35; color: #fff; }
+.fb b { display: block; font-size: 17px; }
+.fb small { font-size: 13px; opacity: .92; }
+.b-new { background: #007aff; }
+.b-wip { background: #ff9500; }
+.b-fix { background: #af52de; }
+.b-done { background: #34c759; }
+.fa { text-align: center; font-size: 20px; line-height: 1; color: var(--text-2); }
+.fre { background: var(--red-bg); color: #d62b20; border-radius: 14px; padding: 10px 12px; font-size: 14px; line-height: 1.4; margin-top: 6px; }
+
+.pin { position: sticky; top: 0; z-index: 5; background: #fff; padding: 6px 0 10px; margin: 0 0 10px; border-bottom: 1px solid var(--sep); }
+.pinrow { display: flex; align-items: center; gap: 3px; }
+.pinrow i { font-style: normal; font-size: 13px; color: var(--text-2); }
+.pb { flex: 1; text-align: center; color: #fff; border-radius: 12px; padding: 7px 2px; font-size: 12px; font-weight: 700; line-height: 1.25; }
+.pb em { display: block; font-style: normal; font-size: 17px; }
+/* ===== SVG-инфографика ===== */
+.svgwrap { margin: 0 0 14px; background: #fff; border-radius: 18px; padding: 10px 8px 8px; border: 1px solid var(--sep); }
+.svgwrap svg { display: block; width: 100%; height: auto; max-width: 100%; }
+.svgwrap [data-tip] { cursor: pointer; transition: opacity .2s; }
+.svgwrap.has-sel [data-tip]:not(.sel) { opacity: .35; }
+.tipbox { margin: 8px 4px 2px; padding: 10px 12px; background: #f2f2f7; border-radius: 12px; font-size: 14px; line-height: 1.45; color: var(--text); }
+.b-gray { background: #8e8e93; }
+#toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140px);
+  background: rgba(40,40,45,.95); color: #fff; padding: 14px 22px; border-radius: 30px; font-size: 16px; font-weight: 600;
+  transition: transform .3s ease; z-index: 10; max-width: 90%; text-align: center; }
+#toast.show { transform: translate(-50%, 0); }
+.errbox { margin: 20px 0; padding: 16px; border-radius: 16px; background: #fff0ef; color: #b3261e; font-size: 15px; line-height: 1.5; word-break: break-word; }
+</style>
+</head>
+<body>
+<div id="app">Загрузка…</div>
+<div id="toast"></div>
+
+<script>
+/* ========== Показ ошибок на экране (чтобы не было пустого экрана) ========== */
+function showError(msg) {
+  var el = document.getElementById('app');
+  if (!el) return;
+  el.innerHTML = '<div class="errbox"><b>Ошибка приложения</b><br>' + String(msg) +
+    '<br><br>Попробуйте закрыть приложение и открыть заново.</div>';
+}
+window.onerror = function (message, src, line) { showError(message + ' (строка ' + line + ')'); };
+
+(function () {
+try {
+
+/* ========== SVG-ИНФОГРАФИКА (рисуется кодом, работает офлайн) ========== */
+function sR(x, y, w, h, fill, stroke, rx, extra) {
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + fill + '"' +
+    (stroke ? ' stroke="' + stroke + '" stroke-width="1.5"' : '') + (extra || '') + '/>';
+}
+function sC(cx, cy, r, fill, stroke) {
+  return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '"' + (stroke ? ' stroke="' + stroke + '" stroke-width="2"' : '') + '/>';
+}
+function sT(x, y, txt, size, fill, weight, anchor, mono, extra) {
+  return '<text x="' + x + '" y="' + y + '" font-size="' + size + '" fill="' + fill + '" font-weight="' + (weight || 400) +
+    '" text-anchor="' + (anchor || 'middle') + '" font-family="' +
+    (mono ? 'ui-monospace, Menlo, Consolas, monospace' : '-apple-system, Helvetica, Arial, sans-serif') + '"' + (extra || '') + '>' + txt + '</text>';
+}
+function sLine(x1, y1, x2, y2, color, marker, width) {
+  return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + color + '" stroke-width="' + (width || 1) +
+    '" stroke-linecap="round"' + (marker ? ' marker-end="url(#' + marker + ')"' : '') + '/>';
+}
+function sMarker(id, color) {
+  return '<marker id="' + id + '" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="' + color + '"/></marker>';
+}
+function sG(tip, inner) { return '<g data-tip="' + tip + '">' + inner + '</g>'; }
+function svgOpen(h, label, markers) {
+  return '<svg viewBox="0 0 360 ' + h + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + label + '"><defs>' + markers + '</defs>';
+}
+function wrapSvg(svg) {
+  return '<div class="svgwrap">' + svg + '<div class="tipbox">👆 Нажмите на любой блок схемы, чтобы узнать подробнее</div></div>';
+}
+
+/* 1. SQL: как работает SELECT */
+function svgSelect() {
+  var s = svgOpen(420, 'Как работает SELECT', sMarker('ahS', '#1c1c1e'));
+  s += sT(20, 20, 'ИСХОДНАЯ ТАБЛИЦА users', 11, '#007aff', 700, 'start');
+  s += sG('📘 Исходная таблица users в базе данных: столбцы id, name, age и три строки-записи. SELECT ничего в ней не меняет, только читает.',
+    sR(20, 28, 320, 128, '#eaf2ff', '#007aff', 14) + sR(20, 28, 320, 32, '#007aff', '', 14) + sR(20, 44, 320, 16, '#007aff', '', 0) +
+    sT(55, 49, 'id', 14, '#fff', 700) + sT(160, 49, 'name', 14, '#fff', 700) + sT(285, 49, 'age', 14, '#fff', 700) +
+    sLine(20, 92, 340, 92, '#bcd6ff') + sLine(20, 124, 340, 124, '#bcd6ff') +
+    sT(55, 81, '1', 14, '#8e8e93', 600) + sT(55, 113, '2', 14, '#8e8e93', 600) + sT(55, 145, '3', 14, '#8e8e93', 600) +
+    sT(160, 81, 'Анна', 14, '#1c1c1e', 600) + sT(160, 113, 'Борис', 14, '#1c1c1e', 600) + sT(160, 145, 'Вера', 14, '#1c1c1e', 600) +
+    sT(285, 81, '25', 14, '#1c1c1e', 600) + sT(285, 113, '34', 14, '#1c1c1e', 600) + sT(285, 145, '41', 14, '#1c1c1e', 600));
+  s += sG('✂️ SELECT берёт только перечисленные столбцы name и age. Столбец id остаётся за кадром.',
+    '<rect x="92" y="30" width="246" height="124" rx="10" fill="rgba(52,199,89,0.12)" stroke="#34c759" stroke-width="2.5" stroke-dasharray="6 4"/>');
+  s += sT(55, 174, '✖ не нужен', 11, '#ff3b30', 700) + sT(215, 174, '✔ берём name и age', 11, '#1f8f3a', 700);
+  s += sLine(180, 182, 180, 196, '#1c1c1e', null, 3);
+  s += sG('⚙️ Это SQL-запрос: «выбери name и age из таблицы users». Так вы говорите базе, что именно показать.',
+    sR(40, 196, 280, 36, '#1c1c1e', '', 18) + sT(180, 219, 'SELECT name, age FROM users', 13, '#fff', 700, 'middle', true));
+  s += sLine(180, 232, 180, 264, '#1c1c1e', 'ahS', 3);
+  s += sT(60, 276, 'РЕЗУЛЬТАТ', 11, '#1f8f3a', 700, 'start');
+  s += sG('✅ Результат запроса: маленькая таблица только с нужными столбцами. Исходная таблица осталась прежней.',
+    sR(60, 282, 240, 128, '#e9f9ee', '#34c759', 14) + sR(60, 282, 240, 32, '#34c759', '', 14) + sR(60, 298, 240, 16, '#34c759', '', 0) +
+    sT(125, 303, 'name', 14, '#fff', 700) + sT(245, 303, 'age', 14, '#fff', 700) +
+    sLine(60, 346, 300, 346, '#b6e8c4') + sLine(60, 378, 300, 378, '#b6e8c4') +
+    sT(125, 335, 'Анна', 14, '#1c1c1e', 600) + sT(125, 367, 'Борис', 14, '#1c1c1e', 600) + sT(125, 399, 'Вера', 14, '#1c1c1e', 600) +
+    sT(245, 335, '25', 14, '#1c1c1e', 600) + sT(245, 367, '34', 14, '#1c1c1e', 600) + sT(245, 399, '41', 14, '#1c1c1e', 600));
+  return wrapSvg(s + '</svg>');
+}
+
+/* 2. SQL: фильтр WHERE с роботами-ситами */
+function sRobot(cx) {
+  var c = '#5e5ce6';
+  return sLine(cx, 228, cx, 221, c, null, 2) + sC(cx, 218, 3, '#ff9500') +
+    sR(cx - 15, 228, 30, 22, c, '', 7) + sC(cx - 6, 238, 3.2, '#fff') + sC(cx + 6, 238, 3.2, '#fff') +
+    sR(cx - 18, 253, 36, 24, c, '', 8) +
+    sLine(cx - 14, 266, cx - 11, 290, c, null, 4) + sLine(cx + 14, 266, cx + 11, 290, c, null, 4) +
+    sC(cx, 298, 14, '#fff', '#1c1c1e') + sC(cx - 6, 294, 2, '#1c1c1e') + sC(cx + 6, 294, 2, '#1c1c1e') +
+    sC(cx, 299, 2, '#1c1c1e') + sC(cx - 6, 304, 2, '#1c1c1e') + sC(cx + 6, 304, 2, '#1c1c1e');
+}
+function svgWhere() {
+  var s = svgOpen(460, 'Как работает фильтр WHERE', sMarker('ahW', '#1c1c1e') + sMarker('ahWR', '#ff3b30') + sMarker('ahWG', '#34c759'));
+  s += sR(20, 14, 320, 140, '#eaf2ff', '#007aff', 14) + sR(20, 14, 320, 28, '#007aff', '', 14) + sR(20, 28, 320, 14, '#007aff', '', 0);
+  s += sT(105, 33, 'name', 13, '#fff', 700) + sT(265, 33, 'age', 13, '#fff', 700);
+  var rows = [['Анна', 25, false], ['Борис', 34, true], ['Вера', 41, true], ['Глеб', 29, false]];
+  rows.forEach(function (r, i) {
+    var top = 42 + i * 28, h = (i === 3) ? 27 : 28;
+    s += sG(r[0] + ', ' + r[1] + ' лет: проверяем ' + r[1] + ' &gt; 30. ' + (r[2] ? 'Да ✅ — строка проходит через фильтр.' : 'Нет ❌ — строка отсеивается.'),
+      sR(22, top, 316, h, '#eaf2ff', '') + (i > 0 ? sLine(22, top, 338, top, '#bcd6ff') : '') +
+      sT(105, top + 19, r[0], 14, '#1c1c1e', 600) + sT(265, top + 19, String(r[1]), 14, '#1c1c1e', 600) +
+      sT(318, top + 19, r[2] ? '✅' : '❌', 13, '#1c1c1e', 400));
+  });
+  s += sLine(180, 154, 180, 190, '#1c1c1e', 'ahW', 3);
+  s += sG('🤖 Фильтр WHERE: роботы-сита проверяют каждую строку по условию age &gt; 30. Подходит — пропускают, не подходит — отсеивают.',
+    sR(30, 192, 300, 124, '#fff4e5', '#ff9500', 20) + sT(180, 213, '🔍 ФИЛЬТР WHERE', 12, '#b36200', 700) +
+    sR(110, 222, 140, 34, '#ff9500', '', 17) + sT(180, 245, 'age &gt; 30', 16, '#fff', 700, 'middle', true) +
+    sRobot(66) + sRobot(294) +
+    sT(180, 278, '✅ условие верно → проходит', 10.5, '#1f8f3a', 700) + sT(180, 294, '❌ не верно → отсеивается', 10.5, '#d62b20', 700));
+  s += sLine(95, 318, 95, 346, '#ff3b30', 'ahWR', 3) + sLine(265, 318, 265, 346, '#34c759', 'ahWG', 3);
+  s += sG('❌ Отсеяны строки, где условие ложно: Анна (25) и Глеб (29) не старше 30.',
+    sR(20, 350, 150, 96, '#ffecea', '#ff3b30', 14) + sT(95, 370, '❌ ОТСЕЯНО', 12, '#d62b20', 800) +
+    sR(36, 380, 118, 24, '#fff', '#ffb3ad', 12) + sT(95, 396, 'Анна · 25', 13, '#8e8e93', 600, 'middle', false, ' text-decoration="line-through"') +
+    sR(36, 410, 118, 24, '#fff', '#ffb3ad', 12) + sT(95, 426, 'Глеб · 29', 13, '#8e8e93', 600, 'middle', false, ' text-decoration="line-through"'));
+  s += sG('✅ Прошли строки, где условие верно: Борис (34) и Вера (41) старше 30. Именно их вернёт запрос.',
+    sR(190, 350, 150, 96, '#e9f9ee', '#34c759', 14) + sT(265, 370, '✅ ПРОШЛИ', 12, '#1f8f3a', 800) +
+    sR(206, 380, 118, 24, '#fff', '#9be0ae', 12) + sT(265, 396, 'Борис · 34', 13, '#1c1c1e', 700) +
+    sR(206, 410, 118, 24, '#fff', '#9be0ae', 12) + sT(265, 426, 'Вера · 41', 13, '#1c1c1e', 700));
+  return wrapSvg(s + '</svg>');
+}
+
+/* 3. QA: жизненный цикл дефекта */
+function sBlock(x, y, w, color, title, sub, tip) {
+  return sG(tip, sR(x, y, w, 64, color, '', 16) + sT(x + w / 2, y + 28, title, 16, '#fff', 800) + sT(x + w / 2, y + 48, sub, 11.5, '#fff', 600));
+}
+function svgLifecycle() {
+  var s = svgOpen(470, 'Жизненный цикл дефекта',
+    sMarker('ahL', '#1c1c1e') + sMarker('ahLR', '#ff3b30') + sMarker('ahLG', '#34c759'));
+  s += sBlock(90, 20, 180, '#8e8e93', 'NEW', 'Баг найден и заведён', '🆕 NEW (Новый): тестировщик нашёл ошибку и завёл баг в трекере. Пока никто не взял его в работу.');
+  s += sLine(180, 84, 180, 122, '#1c1c1e', 'ahL', 3);
+  s += sBlock(90, 124, 180, '#007aff', 'ASSIGNED', 'Назначен разработчику', '👤 ASSIGNED (Назначен): баг передали конкретному разработчику, и он приступает к исправлению.');
+  s += sLine(180, 188, 180, 226, '#1c1c1e', 'ahL', 3);
+  s += sBlock(90, 228, 180, '#ff9500', 'FIXED', 'Разработчик исправил', '🔧 FIXED (Исправлен): разработчик говорит, что починил. Теперь тестировщик должен перепроверить.');
+  s += sT(180, 318, '🔍 перепроверка', 11, '#6c6c70', 700);
+  s += sLine(150, 292, 99, 388, '#ff3b30', 'ahLR', 3) + sLine(210, 292, 261, 388, '#34c759', 'ahLG', 3);
+  s += sT(112, 336, 'есть ошибка', 11, '#d62b20', 700, 'end') + sT(240, 336, 'ошибки нет', 11, '#1f8f3a', 700, 'start');
+  s += sBlock(22, 390, 150, '#ff3b30', 'REOPENED', 'Баг вернули в работу', '🔁 REOPENED (Переоткрыт): при перепроверке ошибка осталась. Баг возвращается разработчику.');
+  s += sBlock(188, 390, 150, '#34c759', 'CLOSED', 'Проверено, закрыт', '✅ CLOSED (Закрыт): тестировщик проверил, ошибки больше нет. Баг закрыт.');
+  s += '<path d="M22 422 H10 V156 H88" fill="none" stroke="#ff3b30" stroke-width="3" stroke-dasharray="6 4" stroke-linecap="round" marker-end="url(#ahLR)"/>';
+  s += sT(49, 254, 'возврат', 11, '#d62b20', 700) + sT(49, 268, 'в работу', 11, '#d62b20', 700);
+  return wrapSvg(s + '</svg>');
+}
+
+/* 4. QA: анатомия баг-репорта */
+function sCard(y, h, color, tint, label, lines, tip) {
+  var g = sR(22, y, 316, h, tint, '', 14) + sR(22, y, 8, h, color, '', 4) + sT(42, y + 21, label, 12, color, 800, 'start');
+  lines.forEach(function (ln, i) { g += sT(42, y + 44 + i * 18, ln, 12.5, '#1c1c1e', 500, 'start'); });
+  return sG(tip, g);
+}
+function svgReport() {
+  var s = svgOpen(470, 'Структура баг-репорта', '');
+  s += sR(10, 6, 340, 456, '#fff', '#d1d1d6', 20) + sR(10, 6, 340, 44, '#1c1c1e', '', 20) + sR(10, 28, 340, 22, '#1c1c1e', '', 0);
+  s += sT(26, 34, '🐛 BUG-128', 14, '#fff', 800, 'start') + sT(334, 34, 'Priority: High', 12, '#ff9f0a', 700, 'end');
+  s += sCard(64, 76, '#007aff', '#eaf2ff', '① SUMMARY · Что? Где? Когда?',
+    ['Кнопка «Войти» не реагирует на нажатие', 'на экране входа в iPhone-приложении'],
+    '① Summary (заголовок): коротко и конкретно — что сломано, где и при каких условиях. По нему разработчик сразу понимает суть.');
+  s += sCard(150, 104, '#af52de', '#f6ecfc', '② STEPS TO REPRODUCE · Шаги',
+    ['1. Открыть приложение', '2. Ввести логин и пароль', '3. Нажать «Войти»'],
+    '② Steps to Reproduce (шаги): пронумерованная инструкция, как повторить ошибку. Каждый шаг — одно простое действие.');
+  s += sCard(264, 70, '#ff3b30', '#ffecea', '③ ACTUAL RESULT · Что пошло не так',
+    ['Ничего не происходит, экран не меняется'],
+    '③ Actual Result (фактический результат): что на самом деле произошло после шагов. Только факты, без эмоций.');
+  s += sCard(344, 70, '#34c759', '#e9f9ee', '④ EXPECTED RESULT · Как должно быть',
+    ['Открывается главный экран приложения'],
+    '④ Expected Result (ожидаемый результат): как программа должна была сработать. Разница между ③ и ④ и есть баг.');
+  s += sG('📱 Окружение: устройство, версия iOS и версия приложения. На одном телефоне баг может быть, а на другом нет.',
+    sR(22, 424, 316, 26, '#f2f2f7', '', 13) + sT(180, 441, '📱 iPhone 13 · iOS 17 · версия 1.2.0', 11.5, '#6c6c70', 700));
+  return wrapSvg(s + '</svg>');
+}
+
+var SVG_SELECT = svgSelect();
+var SVG_WHERE = svgWhere();
+var SVG_LIFECYCLE = svgLifecycle();
+var SVG_REPORT = svgReport();
+
+/* ========== ДАННЫЕ КУРСА ========== */
+var POINTS_PER_Q = 10;
+var FINISH_BONUS = 10;
+
+var MODULES = [
+  {
+    id: 'sql', icon: '📊', color: 'rgba(0,122,255,.15)',
+    title: 'Модуль 1: Базы данных',
+    subtitle: 'SQL для БФТ',
+    desc: 'Учимся «разговаривать» с базой данных на языке SQL.',
+    lessons: [
+      {
+        id: 'sql1', title: '🔎 Что такое БД и зачем нужен SELECT', sub: 'Таблицы, строки, столбцы',
+        theory: '' +
+'<p><b>База данных (БД)</b> — это организованное хранилище информации. Представьте огромную картотеку: в ней всё разложено по ящикам, и нужную карточку можно найти за секунду. В БД данные лежат в <b>таблицах</b>: столбцы — это свойства (имя, возраст), а строки — отдельные записи (один человек).</p>' +
+'<p>Вот пример таблицы <code>users</code>. Столбцы идут сверху вниз, строки слева направо:</p>' +
+'<div class="legend"><span class="lg c1">🟦 столбец = одно свойство (name)</span><span class="lg c2">🟧 строка = одна запись (Борис)</span></div>' +
+'<div class="tbl-wrap"><table class="vt">' +
+'<tr><th>id</th><th class="col">name</th><th>age</th><th>city</th></tr>' +
+'<tr><td>1</td><td class="col">Анна</td><td>25</td><td>Москва</td></tr>' +
+'<tr class="row"><td>2</td><td class="col">Борис</td><td>34</td><td>Казань</td></tr>' +
+'<tr><td>3</td><td class="col">Вера</td><td>41</td><td>Москва</td></tr>' +
+'<tr><td>4</td><td class="col">Глеб</td><td>29</td><td>Самара</td></tr>' +
+'</table></div>' +
+'<p>Чтобы «достать» данные, используют команду <b>SELECT</b> — «выбери». Она читает данные и ничего не меняет и не удаляет. Формула простая: <code>SELECT что FROM откуда</code>.</p>' +
+'<pre>SELECT * FROM users;\n-- звёздочка = все столбцы\n\nSELECT name FROM users;\n-- только столбец name: Анна, Борис, Вера, Глеб</pre>' +
+'<div class="vcap">👀 Как работает SELECT (нажимайте на блоки):</div>' + SVG_SELECT +
+'<p>Так аналитики и тестировщики быстро проверяют, что именно лежит в базе, например, сохранился ли новый пользователь после регистрации.</p>',
+        quiz: [
+          { q: 'Что такое база данных?', opts: ['Программа для рисования', 'Организованное хранилище данных в таблицах', 'Тип монитора'], correct: 1, hint: 'Вспомните картотеку: БД хранит информацию упорядоченно, в таблицах со строками и столбцами.' },
+          { q: 'Что делает команда SELECT?', opts: ['Удаляет таблицу', 'Создаёт нового пользователя', 'Выбирает (читает) данные из таблицы'], correct: 2, hint: 'SELECT переводится как «выбрать». Она только читает данные и ничего не удаляет.' },
+          { q: 'Что вернёт запрос SELECT name FROM users; ?', opts: ['Только столбец name всех пользователей', 'Все столбцы таблицы', 'Ошибку'], correct: 0, hint: 'После SELECT мы указываем нужные столбцы. Здесь это только name, значит, остальные не показываются.' }
+        ]
+      },
+      {
+        id: 'sql2', title: '🎯 Фильтрация данных через WHERE', sub: 'Отбираем нужные строки',
+        theory: '' +
+'<p>Обычно нужны не все строки, а только подходящие. Для этого после <code>FROM</code> добавляют <b>WHERE</b> — «где» и условие. База проверит каждую строку и покажет только те, что подходят.</p>' +
+'<div class="vcap">🧪 Как работает фильтр WHERE (нажимайте на блоки):</div>' + SVG_WHERE +
+'<pre>SELECT * FROM users\nWHERE city =\'Москва\';\n-- вернёт: Анна и Вера</pre>' +
+'<p>Текст в SQL всегда пишется в <b>одинарных кавычках</b>: <code>\'Москва\'</code>. Числа пишутся без кавычек. Для чисел можно использовать сравнения: <code>&gt;</code> больше, <code>&lt;</code> меньше, <code>=</code> равно.</p>' +
+'<pre>SELECT name FROM users\nWHERE age &gt; 30;\n-- вернёт: Борис, Вера</pre>' +
+'<p>Условия можно объединять: <b>AND</b> — «и то, и другое», <b>OR</b> — «или». Например, <code>WHERE city = \'Москва\' AND age &gt; 30</code> вернёт только Веру: она и из Москвы, и старше 30.</p>',
+        quiz: [
+          { q: 'Для чего нужен оператор WHERE?', opts: ['Фильтрует строки по условию', 'Удаляет столбцы', 'Сортирует таблицу по алфавиту'], correct: 0, hint: 'WHERE переводится как «где». Он оставляет только те строки, которые подходят под условие.' },
+          { q: 'Какой запрос вернёт пользователей старше 30 лет?', opts: ['SELECT * FROM users IF age > 30;', 'WHERE * FROM users SELECT age > 30;', 'SELECT * FROM users WHERE age > 30;'], correct: 2, hint: 'Порядок всегда такой: SELECT что → FROM откуда → WHERE условие.' },
+          { q: 'Как правильно записать условие для города Москва?', opts: ['WHERE city = Москва', 'WHERE city = \'Москва\'', 'WHERE city == [Москва]'], correct: 1, hint: 'Текстовые значения в SQL берут в одинарные кавычки, а знак сравнения — одинарное «=».' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'qa', icon: '🐛', color: 'rgba(255,149,0,.18)',
+    title: 'Модуль 2: Тестирование ПО',
+    subtitle: 'QA Manual',
+    desc: 'Находим ошибки в программах и грамотно о них сообщаем.',
+    lessons: [
+      {
+        id: 'qa1', title: '🐛 Что такое баг и его жизненный цикл', sub: 'От обнаружения до закрытия',
+        pin: '<div class="pinrow"><span class="pb b-gray"><em>🆕</em>NEW</span><i>➜</i><span class="pb b-new"><em>👤</em>ASSIGNED</span><i>➜</i><span class="pb b-wip"><em>🔧</em>FIXED</span><i>➜</i><span class="pb b-done"><em>✅</em>CLOSED</span></div>',
+        theory: '' +
+'<p><b>Баг (дефект)</b> — это расхождение между тем, как программа <i>должна</i> работать, и тем, как она работает на самом деле. Пример: на кнопку «Войти» нажали, а ничего не произошло. Ожидали вход в аккаунт, получили тишину — это баг.</p>' +
+'<p>У каждого бага есть <b>жизненный цикл</b> — путь по статусам, пока ошибка не будет побеждена:</p>' +
+'<div class="vcap">🔄 Жизненный цикл дефекта (нажимайте на блоки):</div>' + SVG_LIFECYCLE +
+'<p>Тестировщик находит баг и заводит его (<b>New</b>). Баг назначают разработчику, тот исправляет (<b>Fixed</b>), а тестировщик перепроверяет. Если всё хорошо — баг <b>Closed</b>. Если ошибка осталась — статус <b>Reopened</b>, и баг возвращается к разработчику.</p>',
+        quiz: [
+          { q: 'Что такое баг?', opts: ['Новая функция приложения', 'Расхождение между ожидаемым и фактическим поведением программы', 'Название языка программирования'], correct: 1, hint: 'Баг — это когда программа делает не то, что должна. Ожидали одно, получили другое.' },
+          { q: 'Какой статус у бага после исправления разработчиком, но до проверки тестировщиком?', opts: ['Closed', 'New', 'Fixed (ждёт перепроверки)'], correct: 2, hint: 'Закрыть баг может только тот, кто проверил исправление. Разработчик лишь отмечает, что исправил.' },
+          { q: 'Тестировщик проверил исправление, но ошибка осталась. Что он делает?', opts: ['Закрывает баг', 'Переоткрывает баг (Reopened)', 'Удаляет баг из системы'], correct: 1, hint: 'Если ошибка не исправлена, баг возвращают разработчику со статусом Reopened.' }
+        ]
+      },
+      {
+        id: 'qa2', title: '📝 Как правильно составлять баг-репорт', sub: 'Чтобы поняли с первого раза',
+        theory: '' +
+'<p><b>Баг-репорт</b> — это описание ошибки для разработчика. Хороший репорт понятен без лишних вопросов. Главное правило: пишите <b>конкретно и по фактам</b>. Плохо: «Не работает». Хорошо: «Кнопка „Войти“ не реагирует на нажатие на экране входа».</p>' +
+'<p>Обязательные части баг-репорта:</p>' +
+'<div class="vcap">🧩 Анатомия идеального баг-репорта (нажимайте на блоки):</div>' + SVG_REPORT +
+'<pre>Заголовок: Кнопка «Войти» не реагирует на нажатие\nШаги:\n 1. Открыть приложение\n 2. Ввести логин и пароль\n 3. Нажать «Войти»\nОжидаемый результат: открывается главный экран\nФактический результат: ничего не происходит\nОкружение: iPhone 13, iOS 17, версия 1.2.0</pre>' +
+'<p><b>Окружение</b> (устройство, система, версия) очень важно: на одном телефоне баг есть, а на другом нет. Хорошо добавить скриншот или видео и указать <b>приоритет</b> — насколько серьёзна ошибка. Тогда разработчик сразу сможет повторить проблему и быстро её исправить.</p>',
+        quiz: [
+          { q: 'Какой заголовок баг-репорта самый удачный?', opts: ['Всё сломалось', 'Не работает', 'Кнопка «Войти» не реагирует на нажатие на iPhone 13, iOS 17'], correct: 2, hint: 'Хороший заголовок конкретный: ясно, что именно сломано и где.' },
+          { q: 'Что такое «шаги воспроизведения»?', opts: ['Пошаговая инструкция, как повторить баг', 'Список сотрудников команды', 'План отпуска тестировщика'], correct: 0, hint: 'Разработчик должен суметь повторить ошибку у себя. Для этого нужны чёткие шаги.' },
+          { q: 'Что нужно указать в разделе «Окружение»?', opts: ['Своё настроение и любимый цвет', 'Устройство, версию ОС и версию приложения', 'Фамилию разработчика'], correct: 1, hint: 'Окружение — это техническая среда, в которой найден баг: устройство, система, версия приложения.' }
+        ]
+      }
+    ]
+  }
+];
+
+var ALL_LESSONS = [];
+MODULES.forEach(function (m) { m.lessons.forEach(function (l) { ALL_LESSONS.push(l); }); });
+
+/* ========== ХРАНИЛИЩЕ: безопасная работа с LocalStorage ========== */
+var KEY = 'it_learn_v2';
+var memoryStore = null; // запасной вариант, если LocalStorage недоступен
+
+function isObj(x) { return x !== null && typeof x === 'object' && !Array.isArray(x); }
+
+function emptyState() { return { done: {}, answers: {}, bonus: {}, points: 0 }; }
+
+function readRaw() {
+  try { return window.localStorage.getItem(KEY); } catch (e) { return memoryStore; }
+}
+function writeRaw(str) {
+  memoryStore = str;
+  try { window.localStorage.setItem(KEY, str); } catch (e) {}
+}
+
+function loadState() {
+  var raw = readRaw();
+  var fresh = emptyState();
+  if (!raw) { writeRaw(JSON.stringify(fresh)); return fresh; }  // данных нет: создаём чистую базу
+  try {
+    var s = JSON.parse(raw);
+    if (!isObj(s)) throw new Error('bad');
+    return {
+      done: isObj(s.done) ? s.done : {},
+      answers: isObj(s.answers) ? s.answers : {},
+      bonus: isObj(s.bonus) ? s.bonus : {},
+      points: (typeof s.points === 'number' && isFinite(s.points) && s.points >= 0) ? s.points : 0
+    };
+  } catch (e) {
+    writeRaw(JSON.stringify(fresh));                             // данные повреждены: начинаем заново
+    return fresh;
+  }
+}
+function saveState() { writeRaw(JSON.stringify(state)); }
+
+var state = loadState();
+
+function doneCount() { return ALL_LESSONS.filter(function (l) { return state.done[l.id]; }).length; }
+function modDone(m) { return m.lessons.filter(function (l) { return state.done[l.id]; }).length; }
+function findMod(id) { return MODULES.filter(function (m) { return m.id === id; })[0]; }
+function findLesson(id) { return ALL_LESSONS.filter(function (l) { return l.id === id; })[0]; }
+
+/* ========== НАВИГАЦИЯ ========== */
+var app = document.getElementById('app');
+var route = { v: 'home' };
+
+function go(r) { route = r; render(); window.scrollTo(0, 0); }
+
+function render() {
+  try {
+    if (route.v === 'module' && findMod(route.id)) return renderModule(findMod(route.id));
+    if (route.v === 'lesson' && findLesson(route.id)) return renderLesson(route.id);
+    route = { v: 'home' };
+    renderHome();
+  } catch (e) { showError(e && e.message ? e.message : e); }
+}
+
+var toastTimer;
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.className = ''; }, 1900);
+}
+
+/* ========== ЭКРАНЫ ========== */
+function renderHome() {
+  var n = doneCount(), total = ALL_LESSONS.length;
+  var pct = Math.round(n / total * 100);
+  var html = '' +
+    '<div class="topbar"></div>' +
+    '<h1 class="large">ИТ с нуля</h1>' +
+    '<div class="card progress-card"><div class="row">' +
+      '<div class="stat"><div class="num">📚 ' + n + ' / ' + total + '</div><div class="lbl">Изучено уроков: ' + n + ' из ' + total + '</div></div>' +
+      '<div class="stat" style="text-align:right"><div class="num">🏆 ' + state.points + '</div><div class="lbl">Набрано баллов: ' + state.points + '</div></div>' +
+    '</div><div class="bar"><i style="width:' + pct + '%"></i></div></div>';
+  MODULES.forEach(function (m) {
+    var d = modDone(m);
+    html += '<button class="module" data-mod="' + m.id + '">' +
+      '<div class="icon" style="background:' + m.color + '">' + m.icon + '</div>' +
+      '<h3>' + m.title + '</h3>' +
+      '<p>' + m.subtitle + '. ' + m.desc + '</p>' +
+      '<span class="chip ' + (d === m.lessons.length ? 'ok' : '') + '">' + (d === m.lessons.length ? '✓ ' : '') + d + ' из ' + m.lessons.length + ' уроков</span>' +
+      '</button>';
+  });
+  html += '<button class="btn ghost" id="resetBtn">🗑️ Сбросить весь прогресс</button>';
+  app.innerHTML = html;
+
+  Array.prototype.forEach.call(app.querySelectorAll('[data-mod]'), function (b) {
+    b.onclick = function () { go({ v: 'module', id: b.getAttribute('data-mod') }); };
+  });
+  document.getElementById('resetBtn').onclick = function () {
+    if (window.confirm('Удалить все баллы и прогресс? Это действие нельзя отменить.')) {
+      state = emptyState(); saveState(); render(); toast('Прогресс сброшен');
+    }
+  };
+}
+
+function renderModule(m) {
+  var html = '' +
+    '<div class="topbar"><button class="back" id="back">‹ Назад</button></div>' +
+    '<h2 class="title">' + m.icon + ' ' + m.title + '</h2>' +
+    '<p class="sub">' + m.subtitle + '. ' + m.desc + '</p>';
+  m.lessons.forEach(function (l, i) {
+    var done = !!state.done[l.id];
+    html += '<button class="lesson-item ' + (done ? 'done' : '') + '" data-les="' + l.id + '">' +
+      '<div class="badge">' + (done ? '✓' : (i + 1)) + '</div>' +
+      '<div><div class="t">' + l.title + '</div><div class="s">' + (done ? 'Пройден' : l.sub) + '</div></div>' +
+      '<div class="arrow">›</div></button>';
+  });
+  app.innerHTML = html;
+  document.getElementById('back').onclick = function () { go({ v: 'home' }); };
+  Array.prototype.forEach.call(app.querySelectorAll('[data-les]'), function (b) {
+    b.onclick = function () { go({ v: 'lesson', id: b.getAttribute('data-les') }); };
+  });
+}
+
+function renderLesson(id) {
+  var l = findLesson(id);
+  var mod = MODULES.filter(function (m) { return m.lessons.indexOf(l) !== -1; })[0];
+  var isDone = !!state.done[id];
+
+  var html = '' +
+    '<div class="topbar"><button class="back" id="back">‹ ' + mod.subtitle + '</button></div>' +
+    '<h2 class="title">' + l.title + '</h2>' +
+    '<p class="sub">' + (isDone ? '✓ Урок пройден' : 'Прочитайте теорию и ответьте на 3 вопроса') + '</p>' +
+    (l.pin ? '<div class="pin">' + l.pin + '</div>' : '') +
+    '<div class="card theory"><h4>📖 Теория</h4>' + l.theory + '</div>';
+  l.quiz.forEach(function (q, qi) {
+    html += '<div class="card" data-q="' + qi + '">' +
+      '<div class="q-title">🎯 Вопрос ' + (qi + 1) + ' из ' + l.quiz.length + ' · +' + POINTS_PER_Q + ' баллов</div>' +
+      '<div class="q-text">' + q.q + '</div>';
+    q.opts.forEach(function (o, oi) {
+      html += '<button class="opt" data-o="' + oi + '">' + o.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</button>';
+    });
+    html += '<div class="hint"></div></div>';
+  });
+  html += '<button class="btn green" id="finish">' + (isDone ? '🎉 Урок завершён ✓' : '🏁 Завершить урок') + '</button><div class="note" id="note"></div>';
+  app.innerHTML = html;
+
+  document.getElementById('back').onclick = function () { go({ v: 'module', id: mod.id }); };
+
+  /* Интерактивные схемы: нажатие на блок показывает пояснение */
+  Array.prototype.forEach.call(app.querySelectorAll('.svgwrap'), function (w) {
+    var box = w.querySelector('.tipbox');
+    var items = w.querySelectorAll('[data-tip]');
+    var hintText = box.textContent;
+    Array.prototype.forEach.call(items, function (g) {
+      g.addEventListener('click', function () {
+        Array.prototype.forEach.call(items, function (o) { o.setAttribute('class', ''); });
+        g.setAttribute('class', 'sel');
+        w.className = 'svgwrap has-sel';
+        box.textContent = g.getAttribute('data-tip');
+      });
+    });
+    box.addEventListener('click', function () {
+      Array.prototype.forEach.call(items, function (o) { o.setAttribute('class', ''); });
+      w.className = 'svgwrap';
+      box.textContent = hintText;
+    });
+  });
+
+  function isSolved(qi) { return !!(isObj(state.answers[id]) && state.answers[id][qi]); }
+
+  function lockCorrect(qi) {
+    var card = app.querySelector('.card[data-q="' + qi + '"]');
+    var q = l.quiz[qi];
+    Array.prototype.forEach.call(card.querySelectorAll('.opt'), function (b, i) {
+      b.disabled = true;
+      b.className = 'opt' + (i === q.correct ? ' correct' : '');
+    });
+    var h = card.querySelector('.hint');
+    h.className = 'hint good show';
+    h.textContent = '✅ Верно!';
+  }
+
+  l.quiz.forEach(function (q, qi) {
+    if (isSolved(qi)) lockCorrect(qi);
+    var card = app.querySelector('.card[data-q="' + qi + '"]');
+    Array.prototype.forEach.call(card.querySelectorAll('.opt'), function (btn) {
+      btn.onclick = function () {
+        if (isSolved(qi)) return;
+        var oi = parseInt(btn.getAttribute('data-o'), 10);
+        if (oi === q.correct) {
+          if (!isObj(state.answers[id])) state.answers[id] = {};
+          state.answers[id][qi] = true;
+          state.points += POINTS_PER_Q;
+          saveState();
+          lockCorrect(qi);
+          toast('+' + POINTS_PER_Q + ' баллов! 🎉');
+        } else {
+          btn.className = 'opt wrong'; btn.disabled = true;
+          var h = card.querySelector('.hint');
+          h.className = 'hint bad show';
+          h.textContent = '💡 Подсказка: ' + q.hint;
+        }
+      };
+    });
+  });
+
+  document.getElementById('finish').onclick = function () {
+    var allOk = l.quiz.every(function (_, i) { return isSolved(i); });
+    var note = document.getElementById('note');
+    if (!allOk) {
+      note.textContent = 'Сначала ответьте правильно на все вопросы теста.';
+      note.style.color = '#ff3b30';
+      return;
+    }
+    if (!state.done[id]) {
+      state.done[id] = true;
+      if (!state.bonus[id]) { state.bonus[id] = true; state.points += FINISH_BONUS; }
+      saveState();
+      toast('Урок завершён! +' + FINISH_BONUS + ' бонус 🏆');
+    }
+    setTimeout(function () { go({ v: 'module', id: mod.id }); }, 700);
+  };
+}
+
+/* ========== ЗАПУСК ========== */
+render();
+
+/* Иконка для экрана «Домой» (необязательная часть, ошибки игнорируются) */
+try {
+  var c = document.createElement('canvas'); c.width = 180; c.height = 180;
+  var x = c.getContext('2d');
+  x.fillStyle = '#007aff'; x.fillRect(0, 0, 180, 180);
+  x.fillStyle = '#ffffff'; x.font = 'bold 72px Helvetica, Arial, sans-serif';
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText('</>', 90, 94);
+  var link = document.createElement('link');
+  link.rel = 'apple-touch-icon'; link.href = c.toDataURL('image/png');
+  document.head.appendChild(link);
+} catch (e) {}
+
+} catch (err) {
+  showError(err && err.message ? err.message : err);
+}
+})();
+</script>
+</body>
+</html>
